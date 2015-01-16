@@ -1,0 +1,40 @@
+buildscript {
+	repositories { mavenCentral() }
+	dependencies { classpath 'com.android.tools.build:gradle:0.13.+' }
+}
+apply plugin: 'android-library'
+apply plugin: 'maven'
+dependencies {
+	compile group: 'android.support', name: 'compatibility-v13', version: '21.0.3'
+	compile group: 'com.google.android.gms', name: 'google-play-services', version: '22.0.0'
+	compile group: 'com.github.t3t5u', name: 'common-http', version: '1.0.0'
+	compile group: 'com.github.t3t5u', name: 'common-ormlite', version: '1.0.0'
+	compile group: 'com.j256.ormlite', name: 'ormlite-android', version: '4.48'
+}
+android {
+	compileSdkVersion 15
+	buildToolsVersion "21.1.1"
+	sourceSets {
+		main { manifest.srcFile 'AndroidManifest.xml' }
+	}
+	lintOptions { abortOnError false }
+}
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+tasks.withType(JavaCompile) {
+	sourceCompatibility = JavaVersion.VERSION_1_7
+	targetCompatibility = JavaVersion.VERSION_1_7
+	options.encoding = 'UTF-8'
+	options.compilerArgs.add('-Xlint:all')
+}
+task installArchives(type: Upload) {
+	repositories.mavenInstaller {
+		configuration = configurations.archives
+		pom.groupId = 'com.github.t3t5u'
+		pom.artifactId = 'common-android'
+		pom.version = '1.0.0'
+	}
+}
+task wrapper(type: Wrapper)
